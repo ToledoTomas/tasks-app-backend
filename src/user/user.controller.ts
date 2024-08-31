@@ -6,11 +6,14 @@ import {
   Patch,
   Param,
   Delete,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Users')
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -26,17 +29,20 @@ export class UserController {
   }
 
   @Get(':id')
-  getUser(@Param('id') id: string) {
-    return this.userService.getUser(+id);
+  getUser(@Param('id', ParseIntPipe) id: number) {
+    return this.userService.getUser(id);
   }
 
   @Patch(':id')
-  patchUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.patchUser(+id, updateUserDto);
+  patchUser(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    return this.userService.patchUser(id, updateUserDto);
   }
 
   @Delete(':id')
-  deleteUser(@Param('id') id: string) {
-    return this.userService.deleteUser(+id);
+  deleteUser(@Param('id', ParseIntPipe) id: number) {
+    return this.userService.deleteUser(id);
   }
 }
