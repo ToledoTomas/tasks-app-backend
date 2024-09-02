@@ -17,6 +17,7 @@ import { User } from './user/entities/user.entity';
       entities: [Task, User],
       synchronize: true,
       logging: true,
+      autoLoadEntities: true,
     }),
     TasksModule,
     UserModule,

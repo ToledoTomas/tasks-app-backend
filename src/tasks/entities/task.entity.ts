@@ -1,4 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from 'src/user/entities/user.entity';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class Task {
@@ -13,4 +20,8 @@ export class Task {
 
   @Column()
   status: string;
+
+  @ManyToOne(() => User, (user) => user.task)
+  @JoinColumn()
+  user: User;
 }

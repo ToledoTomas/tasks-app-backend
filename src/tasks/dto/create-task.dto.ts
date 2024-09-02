@@ -1,5 +1,4 @@
 import {
-  IsAlphanumeric,
   IsEnum,
   IsNotEmpty,
   IsString,
