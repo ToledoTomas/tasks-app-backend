@@ -1,23 +1,31 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Task } from './entities/task.entity';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class TasksService {
   constructor(
     @InjectRepository(Task) private readonly taskRepository: Repository<Task>,
+    private readonly userService: UserService,
   ) {}
 
-  postTask(task: CreateTaskDto) {
+  async postTask(task: CreateTaskDto) {
+    const userFound = await this.userService.getUser(task.userId);
+
+    if (!userFound) throw new NotFoundException();
+
     const newTask = this.taskRepository.create(task);
     return this.taskRepository.save(newTask);
   }
 
   getTasks() {
-    return this.taskRepository.find();
+    return this.taskRepository.find({
+      relations: ['user'],
+    });
   }
 
   getTask(id: number) {

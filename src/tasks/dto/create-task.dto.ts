@@ -1,6 +1,8 @@
 import {
   IsEnum,
   IsNotEmpty,
+  IsNumber,
+  IsPositive,
   IsString,
   MinLength,
 } from 'class-validator';
@@ -20,4 +22,9 @@ export class CreateTaskDto {
   @IsString()
   @IsEnum(['PENDIENTE', 'EN_PROCESO', 'COMPLETADO'])
   status: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  @IsPositive()
+  userId: number;
 }
