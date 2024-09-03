@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Task } from './entities/task.entity';
 import { UserService } from 'src/user/user.service';
+import { TaskFilterDto } from 'src/common/dto/task-filters.dto';
 
 @Injectable()
 export class TasksService {
@@ -22,10 +23,22 @@ export class TasksService {
     return this.taskRepository.save(newTask);
   }
 
-  getTasks() {
-    return this.taskRepository.find({
-      relations: ['user'],
-    });
+  async getTasks(filterDto: TaskFilterDto): Promise<Task[]> {
+    const { status, sortDirection } = filterDto;
+
+    const query = this.taskRepository.createQueryBuilder('task');
+
+    if (status) {
+      query.andWhere('task.status = :status', { status });
+    }
+
+    if (sortDirection) {
+      query.orderBy('task.createdAt', sortDirection);
+    }
+
+    const tasks = await query.getMany();
+
+    return tasks;
   }
 
   getTask(id: number) {

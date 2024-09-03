@@ -7,11 +7,13 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { TaskFilterDto } from 'src/common/dto/task-filters.dto';
 
 @ApiTags('Tasks')
 @Controller('tasks')
@@ -24,8 +26,8 @@ export class TasksController {
   }
 
   @Get()
-  getTasks() {
-    return this.tasksService.getTasks();
+  getTasks(@Query() filterDto: TaskFilterDto) {
+    return this.tasksService.getTasks(filterDto);
   }
 
   @Get(':id')

@@ -8,22 +8,18 @@ import {
 } from 'class-validator';
 
 export class CreateTaskDto {
-  @IsNotEmpty()
   @IsString()
   @MinLength(3, { message: 'El titulo debe ser mayor a 3 caracteres' })
   title: string;
 
-  @IsNotEmpty()
   @IsString()
   @MinLength(10, { message: 'La descripción debe ser mayor a 10 caracteres' })
   description: string;
 
   @IsNotEmpty()
-  @IsString()
-  @IsEnum(['PENDIENTE', 'EN_PROCESO', 'COMPLETADO'])
-  status: string;
+  @IsEnum(['BACKLOG', 'PENDIENTE', 'COMPLETADO'])
+  status: 'BACKLOG' | 'PENDIENTE' | 'COMPLETADO';
 
-  @IsNotEmpty()
   @IsNumber()
   @IsPositive()
   userId: number;
