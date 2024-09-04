@@ -42,24 +42,28 @@ export class TasksService {
   }
 
   getTask(id: number) {
-    return this.taskRepository.findOne({
+    const task = this.taskRepository.findOne({
       where: {
         id,
       },
     });
+
+    if (!task) throw new NotFoundException();
+
+    return task;
   }
 
   async patchTask(id: number, task: UpdateTaskDto) {
-    const taskFound = await this.taskRepository.findOne({
-      where: {
-        id,
-      },
-    });
+    const taskFound = await this.getTask(id);
     const result = Object.assign(taskFound, task);
     return this.taskRepository.save(result);
   }
 
   deleteTask(id: number) {
+    const taskFound = this.getTask(id);
+
+    if (!taskFound) throw new NotFoundException();
+
     return this.taskRepository.delete(id);
   }
 }

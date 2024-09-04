@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -12,6 +12,13 @@ export class UserService {
   ) {}
 
   postUser(createUserDto: CreateUserDto) {
+    const userFound = this.userRepository.findOne({
+      where: {
+        email: createUserDto.email,
+      },
+    });
+
+    if (userFound) throw new Error('El usuario ya existe');
     const user = this.userRepository.create(createUserDto);
     return this.userRepository.save(user);
   }
@@ -21,24 +28,26 @@ export class UserService {
   }
 
   getUser(id: number) {
-    return this.userRepository.findOne({
-      where: {
-        id,
-      },
-    });
-  }
-
-  patchUser(id: number, updateUserDto: UpdateUserDto) {
     const user = this.userRepository.findOne({
       where: {
         id,
       },
     });
+
+    if (!user) throw new NotFoundException();
+
+    return user;
+  }
+
+  async patchUser(id: number, updateUserDto: UpdateUserDto) {
+    const user = await this.getUser(id);
     const result = Object.assign(user, updateUserDto);
     return this.userRepository.save(result);
   }
 
-  deleteUser(id: number) {
+  async deleteUser(id: number) {
+    const userFound = await this.getUser(id);
+    if (!userFound) throw new NotFoundException();
     return this.userRepository.delete(id);
   }
 }
