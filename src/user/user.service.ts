@@ -18,7 +18,7 @@ export class UserService {
       },
     });
 
-    if (userFound) throw new Error('El usuario ya existe');
+    if (!userFound) throw new Error('El email ya fue registrado');
     const user = this.userRepository.create(createUserDto);
     return this.userRepository.save(user);
   }
@@ -49,5 +49,17 @@ export class UserService {
     const userFound = await this.getUser(id);
     if (!userFound) throw new NotFoundException();
     return this.userRepository.delete(id);
+  }
+
+  async getUserByUsername(username: string) {
+    const user = await this.userRepository.findOne({
+      where: {
+        username,
+      },
+    });
+
+    if (!user) throw new NotFoundException();
+
+    return user;
   }
 }
