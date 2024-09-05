@@ -51,14 +51,15 @@ export class UserService {
     return this.userRepository.delete(id);
   }
 
-  async getUserByUsername(username: string) {
+  async getUserByUsername(username: string, password: string) {
     const user = await this.userRepository.findOne({
       where: {
         username,
+        password,
       },
     });
 
-    if (!user) throw new NotFoundException();
+    if (!user) throw new NotFoundException('Usuario o contraseña incorrectos');
 
     return user;
   }

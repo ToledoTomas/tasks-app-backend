@@ -9,7 +9,14 @@ import {
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Request } from 'express';
 
+interface RequestWithUser extends Request {
+  user: {
+    username: string;
+    role: string;
+  };
+}
 
 @ApiBearerAuth()
 @ApiTags('Auth')
@@ -31,7 +38,11 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Post('protected')
-  getProtectedData(@Req() req) {
-    return { message: 'Esta es la data protegida', user: req.user };
+  getProtectedData(@Req() req: RequestWithUser) {
+    return {
+      message: 'Esta es la data protegida',
+      user: req.user,
+      role: req.user.role,
+    };
   }
 }
