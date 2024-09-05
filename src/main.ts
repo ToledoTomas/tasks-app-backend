@@ -12,6 +12,7 @@ async function bootstrap() {
     }),
   );
   const config = new DocumentBuilder()
+    .addBearerAuth()
     .setTitle('Todo list API')
     .setDescription('Descripcion del ToDo app')
     .setVersion('1.0')
