@@ -51,7 +51,7 @@ export class UserService {
     return this.userRepository.delete(id);
   }
 
-  async getUserByUsername(username: string, password: string) {
+  async getUserByUserAndPass(username: string, password: string) {
     const user = await this.userRepository.findOne({
       where: {
         username,
