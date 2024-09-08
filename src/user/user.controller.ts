@@ -15,7 +15,6 @@ import { ApiTags } from '@nestjs/swagger';
 import { Roles } from 'src/auth/decorators/role.decorator';
 
 @ApiTags('Users')
-@Roles('admin')
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
