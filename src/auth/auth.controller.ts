@@ -4,14 +4,12 @@ import {
   Post,
   Req,
   UnauthorizedException,
-  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
-import { RolesGuard } from './guards/roles.guard';
-import { Roles } from './decorators/role.decorator';
+import { Role } from './enums/role.enum';
+import { Auth } from './decorators/auth.decorator';
 
 interface RequestWithUser extends Request {
   user: {
@@ -39,8 +37,7 @@ export class AuthController {
   }
 
   @Post('protected')
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('admin')
+  @Auth(Role.ADMIN)
   getProtectedData(@Req() req: RequestWithUser) {
     return {
       message: 'Esta es la data protegida',
