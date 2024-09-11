@@ -11,14 +11,14 @@ export class UserService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
 
-  postUser(createUserDto: CreateUserDto) {
-    const userFound = this.userRepository.findOne({
+  async postUser(createUserDto: CreateUserDto) {
+    const userFound = await this.userRepository.findOne({
       where: {
         email: createUserDto.email,
       },
     });
 
-    if (!userFound) throw new Error('El email ya fue registrado');
+    if (userFound) throw new Error('El email ya fue registrado');
     const user = this.userRepository.create(createUserDto);
     return this.userRepository.save(user);
   }
