@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -15,12 +19,20 @@ export class TasksService {
   ) {}
 
   async postTask(task: CreateTaskDto) {
-    const userFound = await this.userService.getUser(task.userId);
+    const user = await this.userService.getUser(task.userId);
 
-    if (!userFound) throw new NotFoundException();
+    const taskToSave = this.taskRepository.create({
+      title: task.title,
+      description: task.description,
+      status: task.status,
+      user,
+    });
 
-    const newTask = this.taskRepository.create(task);
-    return this.taskRepository.save(newTask);
+    if (!task.userId) {
+      throw new BadRequestException('El userId es requerido');
+    }
+
+    return await this.taskRepository.save(taskToSave);
   }
 
   async getTasks(filterDto: TaskFilterDto): Promise<Task[]> {

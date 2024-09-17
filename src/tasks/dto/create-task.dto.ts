@@ -20,6 +20,7 @@ export class CreateTaskDto {
   @IsEnum(['BACKLOG', 'PENDIENTE', 'COMPLETADO'])
   status: 'BACKLOG' | 'PENDIENTE' | 'COMPLETADO';
 
+  @IsNotEmpty()
   @IsNumber()
   @IsPositive()
   userId: number;

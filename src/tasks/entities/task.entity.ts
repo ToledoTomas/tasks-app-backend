@@ -24,10 +24,7 @@ export class Task {
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
-  @Column()
-  userId: number;
-
-  @ManyToOne(() => User, (user) => user.task)
-  @JoinColumn()
+  @ManyToOne(() => User, (user) => user.task, { eager: true })
+  @JoinColumn({ name: 'userId' })
   user: User;
 }
