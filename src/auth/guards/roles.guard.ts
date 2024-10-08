@@ -5,7 +5,7 @@ import { Role } from '../enums/role.enum';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
-  constructor(private readonly reflector: Reflector) {}
+  constructor(private reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean {
     const role = this.reflector.getAllAndOverride<Role>(ROLES_KEY, [
@@ -16,7 +16,8 @@ export class RolesGuard implements CanActivate {
     if (!role) return true;
 
     const { user } = context.switchToHttp().getRequest();
+    console.log('El usuario encontrado es: ', user);
 
-    return role === user.role;
+    return role === user?.role;
   }
 }

@@ -2,7 +2,6 @@ import {
   IsAlphanumeric,
   IsEmail,
   IsNotEmpty,
-  Min,
   MinLength,
 } from 'class-validator';
 
@@ -19,4 +18,5 @@ export class CreateUserDto {
   @IsAlphanumeric()
   @MinLength(6, { message: 'La contraseña debe tener al menos 6 caracteres' })
   password: string;
+
 }

@@ -42,7 +42,6 @@ export class AuthController {
     return {
       message: 'Esta es la data protegida',
       user: req.user,
-      role: req.user.role,
     };
   }
 }
